@@ -1,0 +1,51 @@
+<form id="order_form_custom" class="order_form" action="./Портативний інтернет_files/thank_you_page.html" method="POST" name="order-form">
+   <input class="field" type="text" name="name" placeholder="Ваше ім&#39;я прізвище" required="">
+   <input class="field" type="tel" name="phone" minlength="10" maxlength="15" placeholder="Ваш телефон" required="">
+   
+  
+   
+   <button class="button">Замовити зі знижкою</button>
+   
+</form>
+
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+                      document.getElementById('order_form_custom').addEventListener('submit', function(e) {
+                          e.preventDefault(); // Prevent the default form submission
+                          
+                          // Get form field values
+                          var name = document.querySelector('input[name="name"]').value;
+                          var phone = document.querySelector('input[name="phone"]').value;
+                        
+                          // Formulate the message
+                          var message = `Нове замовлення(покривало):\nІм'я: ${name}\nТелефон: ${phone}`;
+                          
+                          // Telegram API variables
+                          var token = '7416410984:AAF3cXgnhF2e0SGFFg6sNEhEMKWBoW_vRdg'; // Replace with your Telegram bot token
+                          var chatId =  585483356; // Replace with your Telegram chat ID
+                          
+                          // Send message via Telegram API
+                          fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+                              method: 'POST',
+                              headers: {
+                                  'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify({
+                                  chat_id: chatId,
+                                  text: message,
+                                  parse_mode: "Markdown"
+                              })
+                          })
+                          .then(response => response.json())
+                          .then(data => {
+                              console.log('Success:', data);
+                              // After successful submission, redirect to the thank you page
+                              window.location.href = "./Портативний інтернет_files/thank_you_page.html";
+                          })
+                          .catch((error) => {
+                              console.error('Error:', error);
+                              alert('Помилка при відправленні замовлення.');
+                          });
+                      });
+                  });
